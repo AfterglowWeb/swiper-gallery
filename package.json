@@ -1,0 +1,34 @@
+{
+	"name": "swiper-gallery",
+	"version": "1.0.0",
+	"description": "Gutenberg Block providing a media Gallery based on Swiper.js",
+	"author": "Cédric Moris Kelly",
+	"license": "GPL-3.0-or-later",
+	"main": "build/index.js",
+	"sideEffects": false,
+	"scripts": {
+		"build": "wp-scripts build --webpack-copy-php",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start --webpack-copy-php",
+		"tailwind": "tailwindcss -i ./src/swiper-gallery/input.css -o ./build/swiper-gallery/output.css --watch"
+	},
+	"devDependencies": {
+		"@tailwindcss/cli": "^4.0.12",
+		"@wordpress/scripts": "^30.12.0",
+		"tailwindcss": "^4.0.12"
+	},
+	"dependencies": {
+		"@dnd-kit/core": "^6.3.1",
+		"@dnd-kit/sortable": "^10.0.0",
+		"@dnd-kit/utilities": "^3.2.2",
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0",
+		"@mui/icons-material": "^6.4.7",
+		"@mui/material": "^6.4.7",
+		"swiper": "^11.2.6"
+	}
+}

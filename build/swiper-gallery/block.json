@@ -1,0 +1,129 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cmk/swiper-gallery",
+  "version": "0.1.0",
+  "title": "Swiper gallery",
+  "category": "widgets",
+  "icon": "smiley",
+  "description": "Media Gallery based on Swiper.js",
+  "example": {},
+  "supports": {
+    "html": false,
+    "innerBlocks": true,
+    "align": [
+      "wide",
+      "full",
+      "left",
+      "center",
+      "right"
+    ],
+    "alignWide": true,
+    "background": {
+      "backgroundImage": true,
+      "backgroundSize": true
+    }
+  },
+  "providesContext": {
+    "cmk/selectedTab": "selectedTab"
+  },
+  "allowedBlocks": [],
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "subtitle": {
+      "type": "string",
+      "default": ""
+    },
+    "gallery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mediaId": {
+            "type": "number",
+            "default": 0
+          },
+          "mediaUrl": {
+            "type": "string",
+            "default": ""
+          },
+          "mediaType": {
+            "type": "string",
+            "default": ""
+          },
+          "mediaAlt": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "default": []
+    },
+    "options": {
+      "type": "object",
+      "default": {
+        "slidesPerView": {
+          "type": "number",
+          "default": 1
+        },
+        "spaceBetween": {
+          "type": "number",
+          "default": 0
+        },
+        "effect": {
+          "type": "string",
+          "default": "slide"
+        },
+        "autoplay": {
+          "type": "boolean",
+          "default": false
+        },
+        "delay": {
+          "type": "number",
+          "default": 3000
+        },
+        "speed": {
+          "type": "number",
+          "default": 500
+        },
+        "loop": {
+          "type": "boolean",
+          "default": false
+        },
+        "hideScrollBar": {
+          "type": "boolean",
+          "default": false
+        },
+        "hideNavigation": {
+          "type": "boolean",
+          "default": false
+        },
+        "hidePagination": {
+          "type": "boolean",
+          "default": false
+        },
+        "galleryHeightDesktop": {
+          "type": "number",
+          "default": 0
+        },
+        "galleryHeightTablet": {
+          "type": "number",
+          "default": 0
+        },
+        "galleryHeightMobile": {
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  "textdomain": "cmk-posts-by-tab",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./output.css",
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js"
+}
