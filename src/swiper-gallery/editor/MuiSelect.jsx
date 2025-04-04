@@ -23,6 +23,7 @@ export default function MuiSelect(props) {
   }, [selectedValue]);
 
   const handleChange = (event) => {
+
     setSelectedValue(event.target.value);
     if (onChange) {
       onChange(event.target.value);

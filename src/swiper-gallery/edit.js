@@ -4,10 +4,11 @@ import { PanelBody, TextControl } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
 import { useBlockProps } from '@wordpress/block-editor';
 import { getBlockType } from '@wordpress/blocks';
-
+import ThemePalette from './front/ThemePalette';
 import SwiperOptions from './editor/SwiperOptions';
 import GallerySelector from './editor/GallerySelector';
-import SwiperGallery from './front/SwiperGallery';
+import EditorGallery from './editor/EditorGallery';
+import './style.scss';
 
 
 export default function Edit(props) {
@@ -23,7 +24,10 @@ export default function Edit(props) {
         if (!attributes.options || typeof attributes.options !== 'object') {
             setAttributes({ options: { ...defaultOptions } });
         }
-    }, [attributes.gallery, attributes.options, setAttributes]);
+
+		setAttributes({ clientId: clientId });
+
+    }, [attributes.gallery, attributes.options, clientId, setAttributes]);
 
 	return (
 		<>
@@ -42,16 +46,18 @@ export default function Edit(props) {
 					/>
 				</PanelBody>
 				<PanelBody title={__('Medias')} initialOpen={false}>
-					<GallerySelector {...props}/>
+					<GallerySelector attributes={attributes} setAttributes={setAttributes} />
 				</PanelBody>
 				<PanelBody title={__('Gallery options')} initialOpen={false}>
-					<SwiperOptions {...props} />
+					<SwiperOptions attributes={attributes} setAttributes={setAttributes} />
 				</PanelBody>
 			</InspectorControls>
 
+			<ThemePalette>
 			<div {...useBlockProps()}>
-				<SwiperGallery attributes={attributes} clientId={clientId} />
+				<EditorGallery attributes={attributes} clientId={clientId} />
 			</div>
+			</ThemePalette>
 		</>
 
 	);

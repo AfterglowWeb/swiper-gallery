@@ -1,29 +1,80 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, CheckboxControl } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
 import MuiInputSlider from './MuiInputSlider';
 import MuiSelect from './MuiSelect';
 import MuiCheckbox from './MuiCheckbox';
 import { __experimentalUnitControl as UnitControl } from '@wordpress/components';
 
 export default function SwiperOptions(props) {
-    
     const { attributes, setAttributes } = props;
     const { options } = attributes;
+
+    // Initialize options structure if empty
+    useEffect(() => {
+        if (!options || typeof options !== 'object') {
+            setAttributes({ 
+                options: {
+                    slidesPerView: 1,
+                    spaceBetween: 0,
+                    effect: 'slide',
+                    autoplay: false,
+                    loop: false,
+                    delay: 3000,
+                    speed: 500,
+                    hideScrollBar: false,
+                    hideNavigation: false,
+                    hidePagination: false,
+                    galleryHeightDesktop: 400,
+                    galleryHeightTablet: 400,
+                    galleryHeightMobile: 400,
+                    showFigcaption: false,
+                    figcaptionPosition: 'bottom',
+                    openModal: false,
+                }
+            });
+        }
+    }, [options, setAttributes]);
+    
+    // Safe destructuring with strict type checking
     const {
         slidesPerView = 1,
         spaceBetween = 0,
         effect = 'slide',
-        autoplay = true,
+        autoplay = false,
         loop = false,
         delay = 3000,
         speed = 500,
         hideScrollBar = false,
         hideNavigation = false,
         hidePagination = false,
-        galleryHeightDesktop = '400px',
-        galleryHeightTablet = '400px',
-        galleryHeightMobile = '400px',
-    } = options;
+        galleryHeightDesktop = 400,
+        galleryHeightTablet = 400,
+        galleryHeightMobile = 400,
+        showFigcaption = false,
+        figcaptionPosition = 'bottom',
+        openModal = false,
+    } = options || {};
+
+    // Helper function to update options with proper types
+    const updateOption = (name, value) => {
+        // Convert values to proper types before storing
+        let typedValue = value;
+        
+        // Handle specific types
+        if (['slidesPerView', 'spaceBetween', 'delay', 'speed'].includes(name)) {
+            typedValue = Number(value);
+        }
+        else if (['autoplay', 'loop', 'hideScrollBar', 'hideNavigation', 
+                  'hidePagination', 'showFigcaption', 'openModal'].includes(name)) {
+            typedValue = Boolean(value);
+        }
+        
+        console.log(`Setting ${name} to:`, typedValue, `(${typeof typedValue})`);
+        
+        setAttributes({
+            options: {...options, [name]: typedValue}
+        });
+    };
 
     const units = [
         { value: 'px', label: 'px', default: 400 },
@@ -31,33 +82,26 @@ export default function SwiperOptions(props) {
         { value: 'vh', label: 'vh', default: 15 },
     ];
 
-
     return (
         <>
         <UnitControl
             label={__('Gallery height (desktop)')}
-            value={ galleryHeightDesktop || 'px' } 
-            units={ units } 
-            onChange={(value) => setAttributes({
-                options: {...options, galleryHeightDesktop: value}
-            })}
-            />
+            value={galleryHeightDesktop} 
+            units={units} 
+            onChange={(value) => updateOption('galleryHeightDesktop', value)}
+        />
         <UnitControl
             label={__('Gallery height (tablet)')}
-            value={ galleryHeightTablet || 'px' }
-            units={ units }
-            onChange={(value) => setAttributes({
-                options: {...options, galleryHeightTablet: value}
-            })}
-            />
+            value={galleryHeightTablet}
+            units={units}
+            onChange={(value) => updateOption('galleryHeightTablet', value)}
+        />
         <UnitControl
             label={__('Gallery height (mobile)')}
-            value={ galleryHeightMobile || 'px' }
-            units={ units }
-            onChange={(value) => setAttributes({
-                options: {...options, galleryHeightMobile: value}
-            })}
-            />
+            value={galleryHeightMobile}
+            units={units}
+            onChange={(value) => updateOption('galleryHeightMobile', value)}
+        />
         <div className="py-2"/>
 
         <MuiInputSlider
@@ -65,25 +109,21 @@ export default function SwiperOptions(props) {
             min={1}
             max={9}
             step={1}
-            value={slidesPerView || 3}
-            onChange={(value) => setAttributes({
-                options: {...options, slidesPerView: value}
-            })}
+            value={slidesPerView}
+            onChange={(value) => updateOption('slidesPerView', value)}
         />
         <MuiInputSlider
             label={__('Space between')}
             min={0}
             max={100}
             step={1}
-            value={spaceBetween || 0}
-            onChange={(value) => setAttributes({
-                options: {...options, spaceBetween: value}
-            })}
+            value={spaceBetween}
+            onChange={(value) => updateOption('spaceBetween', value)}
         />
         <div className="py-2"/>
         <MuiSelect
             label={__('Effect')}
-            value={effect || ''}
+            value={typeof effect === 'string' ? effect : 'slide'}
             options={[
                 { label: __('Slide'), value: 'slide' },
                 { label: __('Fade'), value: 'fade' },
@@ -93,74 +133,85 @@ export default function SwiperOptions(props) {
                 { label: __('Flip'), value: 'flip' },
                 { label: __('Creative'), value: 'creative' },
             ]}
-            onChange={(value) => setAttributes({
-                options: {...options, effect: value}
-            })}
+            onChange={(value) => updateOption('effect', value)}
         />
         
         <MuiCheckbox
             label={__('Autoplay')}
-            checked={autoplay || false}
-            onChange={(value) => setAttributes({
-                options: {...options, autoplay: value}
-            })}
+            checked={Boolean(autoplay)}
+            onChange={(value) => updateOption('autoplay', value)}
         />
         
-        {options.autoplay &&
+        {autoplay && (
             <>
             <MuiInputSlider
                 label={__('Delay')}
                 min={0}
                 max={10000}
                 step={100}
-                value={delay || 3000}
-                onChange={(value) => setAttributes({
-                    options: {...options, delay: value}
-                })}
+                value={delay}
+                onChange={(value) => updateOption('delay', value)}
             />
             <MuiInputSlider
                 label={__('Speed')}
                 min={0}
                 max={10000}
                 step={100}
-                value={speed || 300}
-                onChange={(value) => setAttributes({
-                    options: {...options, speed: value}
-                })}
+                value={speed}
+                onChange={(value) => updateOption('speed', value)}
             />
             </>
-        }
+        )}
 
         <div className="py-2"/>
 
         <MuiCheckbox
             label={__('Loop')}
-            checked={loop || false}
-            onChange={(value) => setAttributes({
-                options: {...options, loop: value}
-            })}
+            checked={Boolean(loop)}
+            onChange={(value) => updateOption('loop', value)}
+        />
+
+        <MuiCheckbox
+            label={__('Show captions')}
+            checked={Boolean(showFigcaption)}
+            onChange={(value) => updateOption('showFigcaption', value)}
+        />
+
+        {showFigcaption && (
+            <>
+            <div className="py-2"/>
+            <MuiSelect
+                label={__('Caption position')}
+                value={typeof figcaptionPosition === 'string' ? figcaptionPosition : 'bottom'}
+                options={[
+                    { label: __('Bottom'), value: 'bottom' },
+                    { label: __('Top'), value: 'top' }
+                ]}
+                onChange={(value) => updateOption('figcaptionPosition', value)}
+            />
+            </>
+        )}
+
+        <MuiCheckbox
+            label={__('Enlarge images on click')}
+            checked={Boolean(openModal)}
+            onChange={(value) => updateOption('openModal', value)}
         />
 
         <MuiCheckbox
             label={__('Hide scroll bar')}
-            checked={hideScrollBar || false}
-            onChange={(value) => setAttributes({
-                options: {...options, hideScrollBar: value}
-            })}
+            checked={Boolean(hideScrollBar)}
+            onChange={(value) => updateOption('hideScrollBar', value)}
         />
         <MuiCheckbox
             label={__('Hide navigation')}
-            checked={hideNavigation || false}
-            onChange={(value) => setAttributes({
-                options: {...options, hideNavigation: value}
-            })}
+            checked={Boolean(hideNavigation)}
+            onChange={(value) => updateOption('hideNavigation', value)}
         />
         <MuiCheckbox
             label={__('Hide pagination')}
-            checked={hidePagination || false}
-            onChange={(value) => setAttributes({
-                options: {...options, hidePagination: value}
-            })}
+            checked={Boolean(hidePagination)}
+            onChange={(value) => updateOption('hidePagination', value)}
         />
         </>
     );
