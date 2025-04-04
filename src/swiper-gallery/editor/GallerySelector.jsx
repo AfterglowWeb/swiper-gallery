@@ -191,7 +191,7 @@ export default function GallerySelector(props) {
 
   const handleSelectMedia = (media) => {
     setIsLoading(true);
-    
+
     try {
       const newGallery = media.map((item) => ({
         mediaId: item.id,

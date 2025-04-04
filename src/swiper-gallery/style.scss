@@ -10,4 +10,11 @@
 	color: #fff;
 	padding: 2px;
 	border-radius: 2px;
+	min-height: 60px;
+}
+
+:root {
+	--swiper-theme-color: var(--wp--preset--color--primary-main);
+	--swiper-pagination-color: var(--wp--preset--color--primary-main);
+	--swiper-pagination-bullet-inactive-color: var(--wp--preset--color--primary-light);
 }
